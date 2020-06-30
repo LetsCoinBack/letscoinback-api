@@ -1,4 +1,4 @@
-package br.com.model.config.email;
+package br.com.letscoinback.config.email;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

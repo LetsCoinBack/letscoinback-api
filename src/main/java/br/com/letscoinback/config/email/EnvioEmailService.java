@@ -1,4 +1,4 @@
-package br.com.model.config.email;
+package br.com.letscoinback.config.email;
 import java.util.Map;
 import java.util.Set;
 

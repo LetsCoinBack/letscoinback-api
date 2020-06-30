@@ -1,4 +1,4 @@
-package br.com.model.config;
+package br.com.letscoinback.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

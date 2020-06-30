@@ -1,4 +1,4 @@
-package br.com.model.persistence.repository;
+package br.com.letscoinback.persistence.repository;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.model.persistence.entity.NotificationEntity;
+import br.com.letscoinback.persistence.entity.NotificationEntity;
 
 @Repository
 @Transactional

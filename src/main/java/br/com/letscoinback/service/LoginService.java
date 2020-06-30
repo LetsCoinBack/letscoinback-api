@@ -1,4 +1,4 @@
-package br.com.model.service;
+package br.com.letscoinback.service;
 
 import java.util.Map;
 
@@ -16,11 +16,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.model.dto.LoginDTO;
-import br.com.model.dto.UserDTO;
-import br.com.model.exception.BusinessRunTimeException;
-import br.com.model.persistence.repository.UserRepository;
-import br.com.model.util.Translator;
+import br.com.letscoinback.dto.LoginDTO;
+import br.com.letscoinback.dto.UserDTO;
+import br.com.letscoinback.exception.BusinessRunTimeException;
+import br.com.letscoinback.persistence.repository.UserRepository;
+import br.com.letscoinback.util.Translator;
 
 @Service
 public class LoginService {

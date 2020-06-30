@@ -1,4 +1,4 @@
-package br.com.model.config;
+package br.com.letscoinback.config;
 
 import java.util.Collection;
 import java.util.Collections;

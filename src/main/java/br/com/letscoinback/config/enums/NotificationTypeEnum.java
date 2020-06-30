@@ -1,4 +1,4 @@
-package br.com.model.config.enums;
+package br.com.letscoinback.config.enums;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package br.com.model.config.email;
+package br.com.letscoinback.config.email;
 
 
 import javax.mail.MessagingException;
@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-import br.com.model.exception.EmailException;
+import br.com.letscoinback.exception.EmailException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 

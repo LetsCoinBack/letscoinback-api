@@ -1,4 +1,4 @@
-package br.com.model.service;
+package br.com.letscoinback.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import br.com.model.dto.PartnerDTO;
-import br.com.model.exception.BusinessRunTimeException;
-import br.com.model.persistence.entity.Partner;
-import br.com.model.persistence.repository.PartnerRepository;
-import br.com.model.util.Translator;
+import br.com.letscoinback.dto.PartnerDTO;
+import br.com.letscoinback.exception.BusinessRunTimeException;
+import br.com.letscoinback.persistence.entity.Partner;
+import br.com.letscoinback.persistence.repository.PartnerRepository;
+import br.com.letscoinback.util.Translator;
 
 @Service
 public class PartnerService {

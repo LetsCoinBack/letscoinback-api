@@ -1,4 +1,4 @@
-package br.com.model.dto;
+package br.com.letscoinback.dto;
 
 import java.sql.Date;
 

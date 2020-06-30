@@ -1,4 +1,4 @@
-package br.com.model.util;
+package br.com.letscoinback.util;
 
 import java.util.Locale;
 import java.util.Optional;

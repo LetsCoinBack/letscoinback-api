@@ -1,8 +1,8 @@
-package br.com.model.service;
+package br.com.letscoinback.service;
 
 import org.springframework.stereotype.Service;
 
-import br.com.model.util.Translator;
+import br.com.letscoinback.util.Translator;
 
 @Service
 public class ModelService {

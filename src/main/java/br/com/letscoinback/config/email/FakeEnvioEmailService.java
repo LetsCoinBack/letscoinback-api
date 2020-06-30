@@ -1,4 +1,4 @@
-package br.com.model.config.email;
+package br.com.letscoinback.config.email;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,4 +1,4 @@
-package br.com.model.service;
+package br.com.letscoinback.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,17 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.com.model.config.enums.NotificationTypeEnum;
-import br.com.model.dto.ChangePasswordDTO;
-import br.com.model.dto.ConfigurationDTO;
-import br.com.model.dto.IndicateDTO;
-import br.com.model.dto.RegisterDTO;
-import br.com.model.dto.UserDTO;
-import br.com.model.exception.BusinessRunTimeException;
-import br.com.model.persistence.entity.User;
-import br.com.model.persistence.repository.ConfigurationRepository;
-import br.com.model.persistence.repository.UserRepository;
-import br.com.model.util.Translator;
+import br.com.letscoinback.config.enums.NotificationTypeEnum;
+import br.com.letscoinback.dto.ChangePasswordDTO;
+import br.com.letscoinback.dto.ConfigurationDTO;
+import br.com.letscoinback.dto.IndicateDTO;
+import br.com.letscoinback.dto.RegisterDTO;
+import br.com.letscoinback.dto.UserDTO;
+import br.com.letscoinback.exception.BusinessRunTimeException;
+import br.com.letscoinback.persistence.entity.User;
+import br.com.letscoinback.persistence.repository.ConfigurationRepository;
+import br.com.letscoinback.persistence.repository.UserRepository;
+import br.com.letscoinback.util.Translator;
 
 @Service
 public class UserService {

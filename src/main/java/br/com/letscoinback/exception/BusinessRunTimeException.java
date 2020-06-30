@@ -1,9 +1,9 @@
-package br.com.model.exception;
+package br.com.letscoinback.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import br.com.model.util.Translator;
+import br.com.letscoinback.util.Translator;
 
 @ResponseStatus(code = HttpStatus.PRECONDITION_FAILED)
 public class BusinessRunTimeException extends RuntimeException {

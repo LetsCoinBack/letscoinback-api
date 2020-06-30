@@ -1,4 +1,4 @@
-package br.com.model.persistence.entity;
+package br.com.letscoinback.persistence.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

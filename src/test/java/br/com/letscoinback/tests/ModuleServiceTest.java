@@ -1,11 +1,11 @@
-package br.com.model.tests;
+package br.com.letscoinback.tests;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import br.com.model.util.Translator;
+import br.com.letscoinback.util.Translator;
 
 @SpringBootTest
 public class ModuleServiceTest {

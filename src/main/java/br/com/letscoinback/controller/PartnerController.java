@@ -1,4 +1,4 @@
-package br.com.model.controller;
+package br.com.letscoinback.controller;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.model.dto.PartnerDTO;
-import br.com.model.service.PartnerService;
+import br.com.letscoinback.dto.PartnerDTO;
+import br.com.letscoinback.service.PartnerService;
 
 @RestController
 @RequestMapping("partner")

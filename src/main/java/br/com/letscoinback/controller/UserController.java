@@ -1,4 +1,4 @@
-package br.com.model.controller;
+package br.com.letscoinback.controller;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.model.dto.ChangePasswordDTO;
-import br.com.model.dto.ConfigurationDTO;
-import br.com.model.dto.IndicateDTO;
-import br.com.model.dto.NotificationDTO;
-import br.com.model.dto.RegisterDTO;
-import br.com.model.dto.UserDTO;
-import br.com.model.service.NotificationService;
-import br.com.model.service.UserService;
+import br.com.letscoinback.dto.ChangePasswordDTO;
+import br.com.letscoinback.dto.ConfigurationDTO;
+import br.com.letscoinback.dto.IndicateDTO;
+import br.com.letscoinback.dto.NotificationDTO;
+import br.com.letscoinback.dto.RegisterDTO;
+import br.com.letscoinback.dto.UserDTO;
+import br.com.letscoinback.service.NotificationService;
+import br.com.letscoinback.service.UserService;
 
 @RestController
 @RequestMapping("user")

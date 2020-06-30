@@ -1,4 +1,4 @@
-package br.com.model.service;
+package br.com.letscoinback.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import br.com.model.config.enums.NotificationTypeEnum;
-import br.com.model.dto.NotificationDTO;
-import br.com.model.exception.BusinessRunTimeException;
-import br.com.model.persistence.entity.NotificationEntity;
-import br.com.model.persistence.repository.NotificationRepository;
+import br.com.letscoinback.config.enums.NotificationTypeEnum;
+import br.com.letscoinback.dto.NotificationDTO;
+import br.com.letscoinback.exception.BusinessRunTimeException;
+import br.com.letscoinback.persistence.entity.NotificationEntity;
+import br.com.letscoinback.persistence.repository.NotificationRepository;
 
 @Service
 public class NotificationService {

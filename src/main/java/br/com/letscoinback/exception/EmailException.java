@@ -1,6 +1,6 @@
-package br.com.model.exception;
+package br.com.letscoinback.exception;
 
-import br.com.model.util.Translator;
+import br.com.letscoinback.util.Translator;
 
 public class EmailException extends RuntimeException {
 

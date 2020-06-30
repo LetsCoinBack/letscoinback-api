@@ -1,4 +1,4 @@
-package br.com.model.controller;
+package br.com.letscoinback.controller;
 
 import java.util.Map;
 
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.model.dto.LoginDTO;
-import br.com.model.dto.UserDTO;
-import br.com.model.service.LoginService;
+import br.com.letscoinback.dto.LoginDTO;
+import br.com.letscoinback.dto.UserDTO;
+import br.com.letscoinback.service.LoginService;
 
 @RestController
 @RequestMapping("login")

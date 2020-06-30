@@ -1,0 +1,10 @@
+image: maven:3-jdk-13
+stages:
+    - develop
+    - production
+production:
+    stage: production
+    only:
+        - master
+    script:
+     - /bin/sh ./sonar.sh

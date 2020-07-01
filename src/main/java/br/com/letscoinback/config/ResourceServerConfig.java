@@ -4,15 +4,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 @Configuration
 @EnableWebSecurity
@@ -27,6 +31,18 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 			.oauth2ResourceServer().jwt()
 				.jwtAuthenticationConverter(jwtAuthenticationConverter());
 	}
+	
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.httpFirewall(allowUrlEncodedSlashHttpFirewall());
+    }
+	
+    @Bean
+    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+        DefaultHttpFirewall firewall = new DefaultHttpFirewall();
+        firewall.setAllowUrlEncodedSlash(true);
+        return firewall;
+    }
 	
 	private JwtAuthenticationConverter jwtAuthenticationConverter() {
 		var jwtAuthenticationConverter = new JwtAuthenticationConverter();

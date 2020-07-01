@@ -27,4 +27,5 @@ public class Partner {
 	@Column(name="user_cashback")
 	private Integer userCashback;
 	private Integer position;
+	private Boolean available;
 }

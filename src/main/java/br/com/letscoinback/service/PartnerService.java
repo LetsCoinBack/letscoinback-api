@@ -27,8 +27,11 @@ public class PartnerService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerService.class);
 	
-	public List<PartnerDTO> getAll () {
-		return partnerRepository.findAll(Sort.by("position").ascending().and(Sort.by("name")))
+	public List<PartnerDTO> getAll (Boolean isAdmin) {
+		List<Partner> list = isAdmin 
+				? partnerRepository.findAll(Sort.by("position").ascending().and(Sort.by("name"))) 
+				: partnerRepository.findByAvailable(true, Sort.by("position").ascending().and(Sort.by("name")));
+		return list
 				.stream()
 				.map(u -> modelMapper.map(u, PartnerDTO.class))
 				.collect(Collectors.toList());

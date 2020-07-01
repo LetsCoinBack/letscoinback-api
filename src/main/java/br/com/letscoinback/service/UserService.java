@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -86,7 +87,7 @@ public class UserService {
 	}
 	
 	public List<UserDTO> getAll () {
-		return userRepository.findAll().stream().map(u -> modelMapper.map(u, UserDTO.class)).collect(Collectors.toList());
+		return userRepository.findAll(Sort.by("name").ascending()).stream().map(u -> modelMapper.map(u, UserDTO.class)).collect(Collectors.toList());
 	}
 	
 	public void updateUser (UserDTO user, String userId) {

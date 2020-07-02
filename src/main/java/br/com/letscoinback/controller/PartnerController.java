@@ -3,6 +3,7 @@ package br.com.letscoinback.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,8 @@ public class PartnerController {
 		Boolean isAdmin = jwt != null && jwt.getClaimAsString("authorities").toUpperCase().indexOf("ADMIN") > 0;
 		return partnerService.getAll(isAdmin);
 	}
-		 
+	
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/register")
 	public void registerPartner(@RequestBody PartnerDTO ptr) {
 		partnerService.savePartner(ptr);

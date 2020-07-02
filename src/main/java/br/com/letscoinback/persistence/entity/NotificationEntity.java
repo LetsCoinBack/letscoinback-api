@@ -2,7 +2,6 @@ package br.com.letscoinback.persistence.entity;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,15 +20,9 @@ public class NotificationEntity {
 	@SequenceGenerator(name="notification_id_seq",sequenceName="notification_id_seq", allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="notification_id_seq")
 	private Integer id;
-	
-	@Column(name="user_id")
 	private Integer userId;
-	
-	@Column(name="notification_type")
 	private String notificationType;
-	
 	private Timestamp date;
-	
 	private String title;
 	private String body;
 	private Boolean read;

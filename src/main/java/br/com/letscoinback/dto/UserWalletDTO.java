@@ -13,12 +13,11 @@ public class UserWalletDTO implements Serializable{
 	private static final long serialVersionUID = -7242554092745115841L;
 	private Integer id;
 	private Timestamp date;
+	private String description;
 	private String transactionType;
 	private String movimentationType;
 	private Integer userId;
-	private Integer partnerId;
-	private Float vlrPurchase;
-	private Float vlrCashbackUser;
+	private Float value;
 	private String status;
 
 }

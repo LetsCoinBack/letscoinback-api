@@ -19,7 +19,7 @@ import br.com.letscoinback.dto.RegisterDTO;
 import br.com.letscoinback.dto.UserDTO;
 import br.com.letscoinback.exception.BusinessRunTimeException;
 import br.com.letscoinback.persistence.entity.User;
-import br.com.letscoinback.persistence.repository.ConfigurationRepository;
+import br.com.letscoinback.persistence.entity.Wallet;
 import br.com.letscoinback.persistence.repository.UserRepository;
 import br.com.letscoinback.util.Translator;
 
@@ -33,10 +33,13 @@ public class UserService {
 	PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	ConfigurationRepository configurationRepository;
+	NotificationService notificationService;
 	
 	@Autowired
-	NotificationService notificationService;
+	ConfigurationService configurationService;
+	
+	@Autowired
+	WalletService walletService;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -67,19 +70,22 @@ public class UserService {
 	
 	public void changePassword (ChangePasswordDTO pass, String id) {
 		User user = userRepository.findById(Integer.valueOf(id)).orElse(null);
+		validadeParams(pass, user);
+		user.setPassword(passwordEncoder.encode(pass.getPassword()));
+		userRepository.save(user);
+	}
+
+	private void validadeParams(ChangePasswordDTO pass, User user) {
 		if (pass.getPassword() == null || pass.getOldPassword() == null) {
 			throw new BusinessRunTimeException("user.password.change.failed");
 		}
 		if (user.getPassword().equals(passwordEncoder.encode(pass.getOldPassword()))) {
 			throw new BusinessRunTimeException("user.password.incorrect");
 		}
-		user.setPassword(passwordEncoder.encode(pass.getPassword()));
-		userRepository.save(user);
 	}
 	
 	public ConfigurationDTO getDefaultCashback () {
-		return modelMapper.map(configurationRepository.findById("DEFAULT_CASHBACK_USER").orElse(null)
-				, ConfigurationDTO.class);
+		return configurationService.getById("DEFAULT_CASHBACK_USER");
 	}
 	
 	public User getUser (Integer id) {
@@ -108,14 +114,38 @@ public class UserService {
 			usr.setPassword(passwordEncoder.encode(user.getPassword()));
 			usr.setAvailable(true);
 			userRepository.save(usr);
-			if (usr.getIndicate() != null) {
-				String body = "O usuário " + usr.getName() + " que você indicou se cadastrou na ferramenta. Assim que ele efetivar seu cadastro seu bônus será creditado!";
-				notificationService.sendNotification(usr.getIndicate(), "Usuário entrou na aplicação!", body, NotificationTypeEnum.INDICATE_REGISTER);
-			}
+			Float registrationBonus = Float.valueOf(configurationService.getById("REGISTRATION_BONUS").getValue());
+			if (registrationBonus != null && registrationBonus > 0) {
+				Integer myId = userRepository.findByEmail(user.getEmail()).get().getId();
+				safeWallet(myId, registrationBonus, "Bônus por se cadastrar na aplicação", "Cadastro");
+			}			
+			saveIndicate(user, usr);
 		} catch (Exception e ) {
 			String msg = "user.register.failed";
 			LOGGER.error(Translator.toLocale(msg), e);
 			throw new BusinessRunTimeException(msg);
 		}
+	}
+
+	private void saveIndicate(RegisterDTO user, User usr) {
+		if (usr.getIndicate() != null) {
+			Float indicationBonus = Float.valueOf(configurationService.getById("INDICATION_BONUS").getValue());
+			if (indicationBonus != null && indicationBonus > 0) {
+				safeWallet(user.getIndicate(), indicationBonus, "Indicação - Bônus de indicação: " + user.getName(), "Indicação");
+			}
+			String body = "O usuário " + usr.getName() + " que você indicou se cadastrou na ferramenta. Assim que ele efetivar seu cadastro seu bônus será creditado!";
+			notificationService.sendNotification(usr.getIndicate(), "Usuário entrou na aplicação!", body, NotificationTypeEnum.INDICATE_REGISTER);
+		}
+	}
+	
+	private void safeWallet (Integer user, Float value, String description, String transactionType) {
+		Wallet w = new Wallet();
+		w.setMovimentationType("Entrada");
+		w.setStatus("Pendente");
+		w.setTransactionType(transactionType); // Tipo default para indicação e registro - Pode ser renomeado
+		w.setUserId(user);
+		w.setValue(value);
+		w.setDescription(description);
+		walletService.saveWallet(w);
 	}
 }

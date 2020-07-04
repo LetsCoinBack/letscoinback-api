@@ -14,28 +14,20 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "wallet", schema="public")
+@Table(name = "wallet", schema = "public")
 public class Wallet {
 
 	@Id
-	@SequenceGenerator(name="wallet_id_seq",sequenceName="wallet_id_seq", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="wallet_id_seq")
+	@SequenceGenerator(name = "wallet_id_seq", sequenceName = "wallet_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wallet_id_seq")
 	private Integer id;
 	private Timestamp date;
+	private String description;
 	private String transactionType;
 	private String movimentationType;
 	private Integer userId;
-	private Integer partnerId;
-	
 	@Column(columnDefinition = "NUMERIC(9,2)")
-	private Float vlrPurchase;
-	
-	@Column(columnDefinition = "NUMERIC(9,2)")
-	private Float vlrCashback;
-	
-	@Column(columnDefinition = "NUMERIC(9,2)")
-	private Float vlrCashbackUser;
-	
+	private Float value;
 	private String status;
 
 }

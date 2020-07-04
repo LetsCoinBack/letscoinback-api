@@ -7,15 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PartnerDTO implements Serializable{
-
+public class PartnerUserDTO implements Serializable{
 	private static final long serialVersionUID = 3509340315625880301L;
 	private Integer id;
 	private String name;
 	private String photo;
-	private String redirect;
-	private Integer userCashback;
-	private Integer position;
-	private Boolean available;
 	private ProviderDTO provider;
 }

@@ -1,5 +1,6 @@
 package br.com.letscoinback.persistence.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,24 +12,24 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
-
 @Data
 @Entity
-@Table(name = "partner", schema="public")
-public class Partner {
+@Table(name = "provider", schema="public")
+public class PreSale {
 	
 	@Id
 	@SequenceGenerator(name="partner_id_seq",sequenceName="partner_id_seq", allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="partner_id_seq")
-	private Integer id;
-	private String name;
-	private String photo;
-	private String redirect;
-	private Integer cashback;
-	private Integer userCashback;
-	private Integer position;
-	private Boolean available;
+	@Column(columnDefinition = "SERIAL")
+	private Long id;
+	
 	@OneToMany
-	@JoinColumn(name = "provider_id")
-	private ProviderEntity provider;
+	@JoinColumn(name = "user_id")
+	private User user;
+	
+
+	@OneToMany
+	@JoinColumn(name = "partner_id")
+	private Partner partner;
+
 }

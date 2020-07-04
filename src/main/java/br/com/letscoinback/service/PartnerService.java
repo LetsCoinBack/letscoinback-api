@@ -47,4 +47,8 @@ public class PartnerService {
 			throw new BusinessRunTimeException(msg);
 		}
 	}
+	
+	public Partner getById(Integer id) {
+		return partnerRepository.findById(id).orElse(null);
+	}
 }

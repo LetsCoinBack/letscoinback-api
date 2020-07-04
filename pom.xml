@@ -107,6 +107,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>letscoinback-api</finalName>
 	</build>
 
 	<repositories>

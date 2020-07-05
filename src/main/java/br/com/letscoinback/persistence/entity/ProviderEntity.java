@@ -1,5 +1,8 @@
 package br.com.letscoinback.persistence.entity;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -14,10 +17,11 @@ public class ProviderEntity {
 	@Id
 	private Integer id;
 	private String name;
-	private String token;
 	private String user;
 	private String password;
 	private String publisher;
 	private String paramSend;
-	
+	@Column(columnDefinition = "TIMESTAMP")
+	private LocalDateTime lastUpdate;
+	private String url;
 }

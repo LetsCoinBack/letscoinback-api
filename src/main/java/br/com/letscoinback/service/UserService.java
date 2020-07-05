@@ -1,5 +1,6 @@
 package br.com.letscoinback.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.letscoinback.config.enums.MovimentationType;
 import br.com.letscoinback.config.enums.NotificationTypeEnum;
 import br.com.letscoinback.dto.ChangePasswordDTO;
 import br.com.letscoinback.dto.ConfigurationDTO;
@@ -107,6 +110,7 @@ public class UserService {
 		userRepository.save(usr);
 	}
 	
+	@Transactional
 	public void registerUser (RegisterDTO user) {
 		try {
 			User usr = modelMapper.map(user, User.class);
@@ -117,7 +121,7 @@ public class UserService {
 			Float registrationBonus = Float.valueOf(configurationService.getById("REGISTRATION_BONUS").getValue());
 			if (registrationBonus != null && registrationBonus > 0) {
 				Integer myId = userRepository.findByEmail(user.getEmail()).get().getId();
-				safeWallet(myId, registrationBonus, "Bônus por se cadastrar na aplicação", "Cadastro");
+				saveWallet(myId, registrationBonus, "Bônus por se cadastrar na aplicação", "Cadastro");
 			}			
 			saveIndicate(user, usr);
 		} catch (Exception e ) {
@@ -131,20 +135,21 @@ public class UserService {
 		if (usr.getIndicate() != null) {
 			Float indicationBonus = Float.valueOf(configurationService.getById("INDICATION_BONUS").getValue());
 			if (indicationBonus != null && indicationBonus > 0) {
-				safeWallet(user.getIndicate(), indicationBonus, "Indicação - Bônus de indicação: " + user.getName(), "Indicação");
+				saveWallet(user.getIndicate(), indicationBonus, "Indicação - Bônus de indicação: " + user.getName(), "Indicação");
 			}
 			String body = "O usuário " + usr.getName() + " que você indicou se cadastrou na ferramenta. Assim que ele efetivar seu cadastro seu bônus será creditado!";
 			notificationService.sendNotification(usr.getIndicate(), "Usuário entrou na aplicação!", body, NotificationTypeEnum.INDICATE_REGISTER);
 		}
 	}
 	
-	private void safeWallet (Integer user, Float value, String description, String transactionType) {
+	private void saveWallet (Integer user, Float value, String description, String transactionType) {
 		Wallet w = new Wallet();
-		w.setMovimentationType("Entrada");
 		w.setStatus("Pendente");
-		w.setTransactionType(transactionType); // Tipo default para indicação e registro - Pode ser renomeado
+		w.setTransactionType(transactionType);
 		w.setUserId(user);
+		w.setMovimentationType(MovimentationType.ENTRADA.getDescription());
 		w.setValue(value);
+		LocalDateTime.now();
 		w.setDescription(description);
 		walletService.saveWallet(w);
 	}

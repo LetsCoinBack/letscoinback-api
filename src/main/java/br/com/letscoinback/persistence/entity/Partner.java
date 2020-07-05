@@ -1,11 +1,12 @@
 package br.com.letscoinback.persistence.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -24,11 +25,14 @@ public class Partner {
 	private String name;
 	private String photo;
 	private String redirect;
-	private Integer cashback;
-	private Integer userCashback;
+	@Column(columnDefinition = "NUMERIC(9,2)")
+	private Float cashback;
+	@Column(columnDefinition = "NUMERIC(9,2)")
+	private Float userCashback;
 	private Integer position;
 	private Boolean available;
-	@OneToMany
-	@JoinColumn(name = "provider_id")
+	
+	@ManyToOne
+	@JoinColumn(nullable = false)
 	private ProviderEntity provider;
 }

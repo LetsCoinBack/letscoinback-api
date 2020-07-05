@@ -57,11 +57,12 @@ public class LoginService {
 		}		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> login (LoginDTO user) {
 		try {
 			String url = authUrl + "/oauth/token";
 			HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(getBody(user), getHeaders());
-		    return restTemplate.exchange(url, HttpMethod.POST, request, Map.class).getBody();	       
+		    return restTemplate.exchange(url, HttpMethod.POST, request, Map.class).getBody();
 		} catch (Exception e) {
 			throw new RuntimeException(Translator.toLocale("login.failed")); 
 		}

@@ -1,7 +1,8 @@
 package br.com.letscoinback.persistence.entity;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,7 +23,8 @@ public class NotificationEntity {
 	private Integer id;
 	private Integer userId;
 	private String notificationType;
-	private Timestamp date;
+	@Column(columnDefinition = "TIMESTAMP")
+	private LocalDateTime date;
 	private String title;
 	private String body;
 	private Boolean read;

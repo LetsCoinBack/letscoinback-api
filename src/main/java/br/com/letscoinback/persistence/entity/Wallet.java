@@ -1,6 +1,6 @@
 package br.com.letscoinback.persistence.entity;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,10 +21,13 @@ public class Wallet {
 	@SequenceGenerator(name = "wallet_id_seq", sequenceName = "wallet_id_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wallet_id_seq")
 	private Integer id;
-	private Timestamp date;
+	@Column(columnDefinition = "TIMESTAMP")
+	private LocalDateTime date;
 	private String description;
 	private String transactionType;
+	
 	private String movimentationType;
+	
 	private Integer userId;
 	@Column(columnDefinition = "NUMERIC(9,2)")
 	private Float value;

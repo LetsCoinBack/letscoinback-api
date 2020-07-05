@@ -11,7 +11,7 @@ public class ProviderDTO implements Serializable{
 
 	private static final long serialVersionUID = 8806283950695546740L;
 	private Long id;
-	private Long name;
+	private String name;
 	private String paramSend;	
 
 }

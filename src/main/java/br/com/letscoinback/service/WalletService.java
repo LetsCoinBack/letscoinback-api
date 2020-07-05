@@ -33,7 +33,7 @@ public class WalletService {
 		return walletRepository.getTotalStatusByUser(id);
 	}
 	
-	public void saveWallet (Wallet wallet) {
-		walletRepository.save(wallet);
+	public Wallet saveWallet (Wallet wallet) {
+		return walletRepository.save(wallet);
 	}
 }

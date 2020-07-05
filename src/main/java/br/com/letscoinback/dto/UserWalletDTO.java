@@ -1,7 +1,7 @@
 package br.com.letscoinback.dto;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ public class UserWalletDTO implements Serializable{
 	
 	private static final long serialVersionUID = -7242554092745115841L;
 	private Integer id;
-	private Timestamp date;
+	private LocalDateTime date;
 	private String description;
 	private String transactionType;
 	private String movimentationType;

@@ -13,4 +13,5 @@ public enum NotificationTypeEnum {
 	NotificationTypeEnum(String des) {
 		this.description = des;
 	}
+	
 }

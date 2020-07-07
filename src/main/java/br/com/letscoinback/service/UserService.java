@@ -149,7 +149,7 @@ public class UserService {
 		w.setUserId(user);
 		w.setMovimentationType(MovimentationType.ENTRADA.getDescription());
 		w.setValue(value);
-		LocalDateTime.now();
+		w.setDate(LocalDateTime.now());
 		w.setDescription(description);
 		walletService.saveWallet(w);
 	}

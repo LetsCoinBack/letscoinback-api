@@ -18,4 +18,7 @@ public class ProviderService {
 		return providerRepository.findAll();
 	}
 	
+	public ProviderEntity getById(Integer id) {
+		return providerRepository.findById(id).orElse(null);
+	}
 }

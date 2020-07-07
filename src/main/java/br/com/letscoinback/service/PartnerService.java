@@ -11,8 +11,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.com.letscoinback.dto.PartnerDTO;
+import br.com.letscoinback.dto.PartnerProviderDTO;
 import br.com.letscoinback.exception.BusinessRunTimeException;
 import br.com.letscoinback.persistence.entity.Partner;
+import br.com.letscoinback.persistence.entity.ProviderEntity;
 import br.com.letscoinback.persistence.repository.PartnerRepository;
 import br.com.letscoinback.util.Translator;
 
@@ -25,21 +27,26 @@ public class PartnerService {
 	@Autowired
 	ModelMapper modelMapper;
 	
+	@Autowired
+	ProviderService providerService;
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerService.class);
 	
-	public List<PartnerDTO> getAll (Boolean isAdmin) {
+	public List<PartnerProviderDTO> getAll (Boolean isAdmin) {
 		List<Partner> list = isAdmin 
 				? partnerRepository.findAll(Sort.by("position").ascending().and(Sort.by("name"))) 
 				: partnerRepository.findByAvailable(true, Sort.by("position").ascending().and(Sort.by("name")));
 		return list
 				.stream()
-				.map(u -> modelMapper.map(u, PartnerDTO.class))
+				.map(u -> modelMapper.map(u, PartnerProviderDTO.class))
 				.collect(Collectors.toList());
 	}
 	
-	public void savePartner (PartnerDTO partner) {
+	public void savePartner (PartnerDTO partner, Integer providerId) {
 		try {
 			Partner ptr = modelMapper.map(partner, Partner.class);
+			ProviderEntity prov = providerService.getById(providerId);
+			ptr.setProvider(prov);
 			partnerRepository.save(ptr);	
 		} catch (Exception e ) {
 			String msg = "partner.register.failed";

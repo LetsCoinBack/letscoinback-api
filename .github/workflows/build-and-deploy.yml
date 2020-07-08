@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 11 ]
+        java: [ 13 ]
     name: Java ${{ matrix.java }} compile
     steps:
       - uses: actions/checkout@master
@@ -30,10 +30,10 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
-    - name: Set up JDK 11
+    - name: Set up JDK 13
       uses: actions/setup-java@v1
       with:
-        java-version: 11
+        java-version: 13
     - name: Build and test project
       run: mvn package -Dmaven.test.skip=true -Drun.profiles=prd --file pom.xml
     - name: Upload Maven build artifact
@@ -57,10 +57,10 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: artifact
-      - name: Set up JDK 11
+      - name: Set up JDK 13
         uses: actions/setup-java@v1
         with:
-          java-version: 11.0.4
+          java-version: 13.0.2
       - name: Login to Docker Hub
         run: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - name: Build Docker image
@@ -76,7 +76,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - name: Update image Task Definition 
+      - name: Update image Task Definition
         run: |
           OLD_TASK_ID=$(aws ecs list-tasks --cluster letscoinback --service-name letscoinback-api | egrep "task/" | sed -E "s/.*task\/(.*)\"/\1/")
           aws ecs stop-task --cluster letscoinback --task $OLD_TASK_ID

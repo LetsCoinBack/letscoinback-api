@@ -76,7 +76,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - name: Update image Task Definition
+      - name: Update image Task Definition 
         run: |
           OLD_TASK_ID=$(aws ecs list-tasks --cluster letscoinback --service-name letscoinback-api | egrep "task/" | sed -E "s/.*task\/(.*)\"/\1/")
           aws ecs stop-task --cluster letscoinback --task $OLD_TASK_ID

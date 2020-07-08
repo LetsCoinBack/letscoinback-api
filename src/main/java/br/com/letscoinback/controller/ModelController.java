@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping("model")
 public class ModelController {
-	
+
 	@Autowired
     ModelService modelService;
 	

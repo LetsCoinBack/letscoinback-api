@@ -3,7 +3,7 @@ package br.com.letscoinback.config.enums;
 import lombok.Getter;
 
 public enum NotificationTypeEnum {
-	BALANCE_RELEASED("SALDO_LIBERADO"),
+	PURCHASE_CHANGE("COMPRA_ALTERADA"),
 	PURCHASE_APPROVE("COMPRA_APROVADA"),
 	INDICATE_REGISTER("INDICADO_REGISTRADO");
 	
@@ -13,4 +13,5 @@ public enum NotificationTypeEnum {
 	NotificationTypeEnum(String des) {
 		this.description = des;
 	}
+	
 }

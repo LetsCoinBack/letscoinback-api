@@ -14,18 +14,23 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "notification", schema="public")
-public class NotificationEntity {
-	
+@Table(name = "wallet", schema = "public")
+public class Wallet {
+
 	@Id
-	@SequenceGenerator(name="notification_id_seq",sequenceName="notification_id_seq", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="notification_id_seq")
+	@SequenceGenerator(name = "wallet_id_seq", sequenceName = "wallet_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wallet_id_seq")
 	private Integer id;
-	private Integer userId;
-	private String notificationType;
 	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime date;
-	private String title;
-	private String body;
-	private Boolean read;
+	private String description;
+	private String transactionType;
+	
+	private String movimentationType;
+	
+	private Integer userId;
+	@Column(columnDefinition = "NUMERIC(9,2)")
+	private Float value;
+	private String status;
+
 }

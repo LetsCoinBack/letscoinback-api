@@ -53,7 +53,9 @@ public class SaleService {
 	
 	@Transactional
 	public void confirmSale (Long preSaleId, String transaction, String value, String cashbackValue) {
-		validadeParams(preSaleId, transaction, value, cashbackValue);
+		if (!validadeParams(preSaleId, transaction, value, cashbackValue)) {
+			return;
+		}
 		Float saleValue = Float.valueOf(value);
 		PreSale preSale = preSaleRepository.findById(preSaleId).get();
 		Float cashback = getCashBack(preSale, saleValue);
@@ -95,13 +97,14 @@ public class SaleService {
 		return walletService.saveWallet(w);
 	}
 	
-	private void validadeParams (Long preSaleId, String transaction, String saleValue, String cashbackValue) {
+	private Boolean validadeParams (Long preSaleId, String transaction, String saleValue, String cashbackValue) { // Método alterado para Boolean, pois a lomadee nao aceite retorno diferente de 200
 		if(preSaleId == null || transaction == null || saleValue == null || cashbackValue == null) {
-			throw new BusinessRunTimeException("paramter.fail");
+			return false;
 		}
 		if ( saleRepository.findByPreSaleId(preSaleId).getId() != null) {
-			throw new BusinessRunTimeException("sale.confirm.almost");
+			return false;
 		}
+		return true;
 	}
 	
 	public Long savePreSale (Integer userId, Integer partnerId) {

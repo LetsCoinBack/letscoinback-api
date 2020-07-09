@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.letscoinback.dto.PartnerDTO;
@@ -28,6 +29,11 @@ public class PartnerController {
 	public List<PartnerProviderDTO> login (@AuthenticationPrincipal Jwt jwt) {
 		Boolean isAdmin = jwt != null && jwt.getClaimAsString("authorities").toUpperCase().indexOf("ADMIN") > 0;
 		return partnerService.getAll(isAdmin);
+	}
+	
+	@GetMapping("/valid/url")
+	public Boolean getBy (@RequestParam String url) {
+		return partnerService.validadeUrlIsPartner(url);
 	}
 	
 	@PreAuthorize("hasAuthority('ADMIN')")

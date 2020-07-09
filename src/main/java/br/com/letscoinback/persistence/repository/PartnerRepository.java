@@ -14,4 +14,5 @@ import br.com.letscoinback.persistence.entity.Partner;
 @Transactional
 public interface PartnerRepository extends JpaRepository<Partner, Integer> {
 	List<Partner> findByAvailable(Boolean available, Sort sort);
+	List<Partner> findByRedirectStartsWith (String url);
 }

@@ -32,6 +32,14 @@ public class PartnerService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PartnerService.class);
 	
+	public Boolean validadeUrlIsPartner (String url) {
+		List<Partner> partner = partnerRepository.findByRedirectStartsWith(url);
+		if (partner == null || partner.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+	
 	public List<PartnerProviderDTO> getAll (Boolean isAdmin) {
 		List<Partner> list = isAdmin 
 				? partnerRepository.findAll(Sort.by("position").ascending().and(Sort.by("name"))) 

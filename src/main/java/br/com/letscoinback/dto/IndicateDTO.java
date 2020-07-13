@@ -14,5 +14,5 @@ public class IndicateDTO implements Serializable{
 	private String name;
 	private String email;
 	private String cel;
-
+	private String linkWehpm;
 }

@@ -19,4 +19,6 @@ public class UserDTO implements Serializable{
 	private String authority;
 	private Integer indicate;
 	private String photo;
+	private String linkWehpm;
+
 }

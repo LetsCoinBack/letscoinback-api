@@ -7,6 +7,11 @@ ENV DBPORT=${DBPORT}
 ENV DBDATABASENAME=${DBDATABASENAME}
 ENV DBUSER=${DBUSER}
 ENV DBPASSWORD=${DBPASSWORD}
+ENV GUID=${GUID}
+ENV ADDRESS=${ADDRESS}
+ENV WPAS=${WPASS}
 ADD target/letscoinback-api.jar letscoinback-api.jar
 EXPOSE $PORT
+RUN apt-get install npm && npm install -g blockchain-wallet-service 
 ENTRYPOINT ["java", "-Dspring.profiles.active=${PROFILE}",  "-jar",  "letscoinback-api.jar"]
+CMD nohup blockchain-wallet-service start --port 3000

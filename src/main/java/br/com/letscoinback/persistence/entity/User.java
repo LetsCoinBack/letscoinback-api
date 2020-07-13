@@ -28,5 +28,6 @@ public class User {
 	private String photo;
 	private String authority;
 	private Integer indicate;
+	private String linkWehpm;
 
 }

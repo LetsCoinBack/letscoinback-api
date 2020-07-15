@@ -20,7 +20,11 @@ public class SaleController {
     SaleService saleService;
 	
 	@GetMapping("/confirm")
-	public void confirmPreSale (@RequestParam Long preSaleId, @RequestParam String transaction, @RequestParam String saleValue, @RequestParam String cashbackValue) {
+	public void confirmPreSale (
+			@RequestParam(required = false) Long preSaleId, 
+			@RequestParam(required = false) String transaction, 
+			@RequestParam(required = false) String saleValue,
+			@RequestParam(required = false) String cashbackValue) {
 		saleService.confirmSale(preSaleId, transaction, saleValue, cashbackValue);
 	}
 

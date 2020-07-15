@@ -33,7 +33,7 @@ public class SaleController {
 	}
 
 	@GetMapping("/pre/{id}")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 	public Long createPreSale(@AuthenticationPrincipal Jwt jwt, @PathVariable Integer id) {
 		Integer userId = Integer.valueOf(jwt.getClaimAsString("id"));
 		return saleService.savePreSale(userId, id);

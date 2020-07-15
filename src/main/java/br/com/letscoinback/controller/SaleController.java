@@ -21,11 +21,15 @@ public class SaleController {
 	
 	@GetMapping("/confirm")
 	public void confirmPreSale (
-			@RequestParam(required = false) Long preSaleId, 
+			@RequestParam(required = false) String preSaleId, 
 			@RequestParam(required = false) String transaction, 
 			@RequestParam(required = false) String saleValue,
 			@RequestParam(required = false) String cashbackValue) {
-		saleService.confirmSale(preSaleId, transaction, saleValue, cashbackValue);
+		try {
+			saleService.confirmSale(preSaleId, transaction, saleValue, cashbackValue);	
+		} catch (Exception e) {
+			return;
+		}		
 	}
 
 	@GetMapping("/pre/{id}")

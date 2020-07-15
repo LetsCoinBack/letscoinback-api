@@ -52,7 +52,8 @@ public class SaleService {
 	}
 	
 	@Transactional
-	public void confirmSale (Long preSaleId, String transaction, String value, String cashbackValue) {
+	public void confirmSale (String pre, String transaction, String value, String cashbackValue) {
+		Long preSaleId = Long.valueOf(pre);
 		if (!validadeParams(preSaleId, transaction, value, cashbackValue)) {
 			return;
 		}

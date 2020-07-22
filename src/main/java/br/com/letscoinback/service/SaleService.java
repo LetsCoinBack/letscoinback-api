@@ -3,8 +3,6 @@ package br.com.letscoinback.service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,50 +19,51 @@ import br.com.letscoinback.persistence.repository.SaleRepository;
 
 @Service
 public class SaleService {
-	
+
 	@Autowired
 	PartnerService partnerService;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	PreSaleRepository preSaleRepository;
-	
+
 	@Autowired
 	SaleRepository saleRepository;
-	
+
 	@Autowired
 	WalletService walletService;
-	
+
 	@Autowired
 	NotificationService notificationService;
-	
+
 	@Autowired
 	ConfigurationService configurationService;
-	
-	public Optional<Sale> getByTransacionProvider (String transaction) {
+
+	public Optional<Sale> getByTransacionProvider(String transaction) {
 		return saleRepository.findByTransactionProvider(transaction);
 	}
-	
-	public Sale getByPreSaleId (Long id) {
+
+	public Sale getByPreSaleId(Long id) {
 		return saleRepository.findByPreSaleId(id);
 	}
-	
-	@Transactional
-	public void confirmSale (String pre, String transaction, String value, String cashbackValue) {
+
+	public Sale confirmSale(String pre, String transaction, String value, String cashbackValue) {
 		Long preSaleId = Long.valueOf(pre);
-		if (!validadeParams(preSaleId, transaction, value, cashbackValue)) {
-			return;
-		}
+		validadeParams(preSaleId, transaction, value, cashbackValue);
 		Float saleValue = Float.valueOf(value);
 		PreSale preSale = preSaleRepository.findById(preSaleId).get();
+		System.out.println(preSale.getId());
 		Float cashback = getCashBack(preSale, saleValue);
 		Wallet wallet = saveWallet(preSale.getUser().getId(), cashback, preSale);
 		Sale sale = createSale(transaction, cashbackValue, saleValue, preSale, wallet);
 		saleRepository.save(sale);
-		String body = "A compra que você fez na loja " + preSale.getPartner().getName() + " foi confirmada, assim que o pagamento for confirmado seu crédito será liberado.";
-		notificationService.sendNotification(wallet.getUserId(), "Compra confirmada", body, NotificationTypeEnum.PURCHASE_APPROVE);
+		String body = "A compra que você fez na loja " + preSale.getPartner().getName()
+				+ " foi confirmada, assim que o pagamento for confirmado seu crédito será liberado.";
+		notificationService.sendNotification(wallet.getUserId(), "Compra confirmada", body,
+				NotificationTypeEnum.PURCHASE_APPROVE);
+		return sale;
 	}
 
 	private Sale createSale(String transaction, String cashbackValue, Float saleValue, PreSale preSale, Wallet wallet) {
@@ -76,16 +75,17 @@ public class SaleService {
 		sale.setSaleValue(saleValue);
 		return sale;
 	}
-	
-	private Float getCashBack (PreSale preSale, Float saleValue) {
+
+	private Float getCashBack(PreSale preSale, Float saleValue) {
 		Float cashback = preSale.getPartner().getUserCashback();
 		if (cashback == null) {
-			cashback = Float.valueOf(configurationService.getById("DEFAULT_CASHBACK_USER").getValue());
+			cashback = Float.valueOf(configurationService.getById("DEFAULT_CASHBACK_USER").getValue().replace(",", "."));
 		}
-		Float lqx = Float.valueOf(configurationService.getById("LQX_QUOTATION").getValue());
+		Float lqx = Float.valueOf(configurationService.getById("LQX_QUOTATION").getValue().replace(",", "."));
 		return (saleValue * (cashback / 100F)) / lqx;
 	}
-	private Wallet saveWallet (Integer user, Float value, PreSale preSale) {
+
+	private Wallet saveWallet(Integer user, Float value, PreSale preSale) {
 		String description = "Cashback - " + preSale.getPartner().getName();
 		Wallet w = new Wallet();
 		w.setMovimentationType(MovimentationType.ENTRADA.getDescription());
@@ -97,23 +97,23 @@ public class SaleService {
 		w.setDescription(description);
 		return walletService.saveWallet(w);
 	}
-	
-	private Boolean validadeParams (Long preSaleId, String transaction, String saleValue, String cashbackValue) { // Método alterado para Boolean, pois a lomadee nao aceite retorno diferente de 200
-		if(preSaleId == null || transaction == null || saleValue == null || cashbackValue == null) {
-			return false;
+
+	private void validadeParams(Long preSaleId, String transaction, String saleValue, String cashbackValue) {
+		if (preSaleId == null || transaction == null || saleValue == null || cashbackValue == null) {
+			throw new BusinessRunTimeException("paramter.fail");
 		}
-		if ( saleRepository.findByPreSaleId(preSaleId).getId() != null) {
-			return false;
+		Sale sale = saleRepository.findByPreSaleId(preSaleId);
+		if (sale != null && sale.getId() != null) {
+			throw new BusinessRunTimeException("sale.confirm.almost");
 		}
-		return true;
 	}
-	
-	public Long savePreSale (Integer userId, Integer partnerId) {
+
+	public Long savePreSale(Integer userId, Integer partnerId) {
 		PreSale pre = createPreSale(userId, partnerId);
 		return preSaleRepository.save(pre).getId();
 	}
-	
-	private PreSale createPreSale (Integer userId, Integer partnerId) {
+
+	private PreSale createPreSale(Integer userId, Integer partnerId) {
 		PreSale pre = new PreSale();
 		User user = userService.getUser(userId);
 		Partner partner = partnerService.getById(partnerId);

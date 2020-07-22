@@ -6,16 +6,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import javax.transaction.Transactional;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -63,17 +65,21 @@ public class UpdateSaleSchedule {
 	@Value("${apimode.schedule.enable}")
 	Boolean enable;
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateSaleSchedule.class);
+	
 	@Scheduled(cron = "0 0 1 * * *", zone = "America/Sao_Paulo")
 	public void updateSale() {
 		if (!enable) {
 			return;
 		}
+		LOGGER.info("Iniciando a JOB - Sincronização de vendas com provedores");
 		List<ProviderEntity> providers = providerService.getAll();
+		LOGGER.info("Provedores encontrados: " + providers.size());
 		providers.forEach(p -> updateProviderSale(p));
 	}
 
-	@Transactional
 	private void updateProviderSale (ProviderEntity provider) {
+		LOGGER.info("Atualizando o provedor: " + provider.getName());
 		String token = getToken(provider);
 		getXmlSales(provider, token);
 	}
@@ -86,13 +92,10 @@ public class UpdateSaleSchedule {
 			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(provider.getUrl() + "reportTransaction/")
 					.queryParam("token", token)
 					.queryParam("publisherId", provider.getPublisher())
-					.queryParam("startDate", startDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-					.queryParam("endDate", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-
-			String response = restTemplate
-					.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class)
-					.getBody();
-			Document doc = convertStringToXMLDocument(response);
+					.queryParam("startDate", startDate.format(DateTimeFormatter.ofPattern("ddMMyyyy")))
+					.queryParam("endDate", LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyyyy")));
+			ResponseEntity<String> response = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,new HttpEntity<>(new HttpHeaders()), String.class);
+			Document doc = convertStringToXMLDocument(response.getBody());
 			executeXml(doc);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -113,11 +116,13 @@ public class UpdateSaleSchedule {
 		Sale sale = saleService.getByTransacionProvider(dto.getTransaction())
 				.orElse(saleService.getByPreSaleId(dto.getAssociateId()));
 		if (sale == null) {
-			return;
+			LOGGER.info("Pré venda não encontrada, confirmando a venda!");
+			sale = saleService.confirmSale(dto.getAssociateId().toString(), dto.getTransaction(), dto.getTotalValue(), dto.getComissionValue());
 		}
 		String status = ProviderSaleStatusEnum.getById(dto.getStatusId());
 		Wallet wallet = sale.getWallet();
 		if (!wallet.getStatus().equals(status)) {
+			LOGGER.info("Atualizando venda: " + sale.getId());
 			wallet.setStatus(status);
 			walletService.saveWallet(wallet);
 			String tiyle = "Status da Compra: " + status;
@@ -138,6 +143,12 @@ public class UpdateSaleSchedule {
 			}
 			if (node.getNodeName().equals("associateId")) {
 				dto.setAssociateId(Long.valueOf(node.getTextContent()));
+			}
+			if (node.getNodeName().equals("commission")) {
+				dto.setComissionValue(node.getTextContent());
+			}
+			if (node.getNodeName().equals("gmv")) {
+				dto.setTotalValue(node.getTextContent());
 			}
 		}
 		return dto;

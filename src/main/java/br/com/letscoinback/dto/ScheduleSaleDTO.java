@@ -12,4 +12,6 @@ public class ScheduleSaleDTO implements Serializable {
 	private Integer statusId;
 	private String transaction;
 	private Long associateId;
+	private String totalValue;
+	private String comissionValue;
 }

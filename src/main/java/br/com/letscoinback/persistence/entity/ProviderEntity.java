@@ -17,6 +17,7 @@ public class ProviderEntity {
 	@Id
 	private Integer id;
 	private String name;
+	@Column(name="username")
 	private String user;
 	private String password;
 	private String publisher;

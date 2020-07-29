@@ -28,7 +28,7 @@ public class LoginController {
 	}
 	
 	@GetMapping("/user/{id}")
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('MASTER')")
 	public UserDTO getUser (@PathVariable Integer id) {
 		return loginService.getUser(id);
 	}

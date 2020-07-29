@@ -18,4 +18,5 @@ public class PartnerProviderDTO implements Serializable{
 	private Integer position;
 	private Boolean available;
 	private ProviderDTO provider;
+	private PartnerSegmentDTO partnerSegment;
 }

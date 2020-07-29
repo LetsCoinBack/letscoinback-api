@@ -11,24 +11,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.letscoinback.dto.ConfigurationDTO;
-import br.com.letscoinback.service.MasterConfigurationService;
+import br.com.letscoinback.service.ConfigurationService;
 
 @RestController
-@RequestMapping("configuration/master/")
-public class ConfigurationController {
+@RequestMapping("configuration")
+public class MasterConfigurationController {
 	
 	
 	@Autowired
-    MasterConfigurationService configurationService;
+    ConfigurationService configurationService;
 	
 	@GetMapping("/all")
-	@PreAuthorize("hasAuthority('MASTER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MASTER')")
 	public List<ConfigurationDTO> getAll() {
 		return configurationService.getAll();
 	}
 	
 	@PostMapping("/save") 
-	@PreAuthorize("hasAuthority('MASTER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MASTER')")
 	public void save(@RequestBody ConfigurationDTO config) {
 		configurationService.save(config);
 	}

@@ -34,43 +34,43 @@ public class UserController {
 	NotificationService notificationService;
 	
 	@GetMapping("/notification")
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('MASTER')")
 	public List<NotificationDTO> getNotification (@AuthenticationPrincipal Jwt jwt) {
 		Integer id = Integer.valueOf(jwt.getClaimAsString("id"));
 		return notificationService.getUserNotification(id);
 	}
 	
 	@GetMapping("/indicate")
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('MASTER')")
 	public List<IndicateDTO> getIndicate (@AuthenticationPrincipal Jwt jwt) {
 		Integer id = Integer.valueOf(jwt.getClaimAsString("id"));
 		return userService.getIndicateUser(id);
 	}
 	
 	@GetMapping("/notification/read/{id}")
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('MASTER')")
 	public void readNotification (@PathVariable Integer id) {
 		notificationService.readNotification(id);
 	}
 	@GetMapping("/all")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MASTER')")
 	public List<UserDTO> login () {
 		return userService.getAll();
 	}
 	
 	@GetMapping("/authority/change/{id}")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MASTER')")
 	public void changeAuthority (@PathVariable Integer id, @RequestParam String authority) {
 		userService.changeAuthority(id, authority);
 	}
 
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('MASTER')")
 	@PostMapping("/update")
 	public void updateUser(@RequestBody UserDTO user, @AuthenticationPrincipal Jwt jwt) {
 		userService.updateUser(user, jwt.getClaimAsString("id"));
 	}
 	
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('MASTER')")
 	@PostMapping("/password/change")
 	public void changePassword(@RequestBody ChangePasswordDTO pass, @AuthenticationPrincipal Jwt jwt) {
 		userService.changePassword(pass, jwt.getClaimAsString("id"));
@@ -87,7 +87,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/indicate/{id}")
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('MASTER')")
 	public IndicateDTO getUserIndicate (@PathVariable Integer id) {
 		return userService.getUserIndicate(id);
 	}

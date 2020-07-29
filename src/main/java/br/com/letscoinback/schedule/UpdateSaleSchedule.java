@@ -3,6 +3,7 @@ package br.com.letscoinback.schedule;
 import java.io.StringReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,6 +31,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import br.com.letscoinback.config.enums.AwinSaleStatusEnum;
 import br.com.letscoinback.config.enums.NotificationTypeEnum;
 import br.com.letscoinback.config.enums.ProviderSaleStatusEnum;
 import br.com.letscoinback.dto.ScheduleSaleDTO;
@@ -80,10 +84,60 @@ public class UpdateSaleSchedule {
 
 	private void updateProviderSale (ProviderEntity provider) {
 		LOGGER.info("Atualizando o provedor: " + provider.getName());
+		String lomadee = "Lomadee";
+		String awin = "Awin";
+		try {
+			if (lomadee.equals(provider.getName())) {
+				updateLomadee(provider);
+			}
+			if (awin.equals(provider.getName())) {
+				updateAwin(provider);
+			}
+		} catch (Exception e) {
+			LOGGER.error("Falha ao atualizar provedor", e);
+		}
+	}
+
+	private void updateAwin(ProviderEntity provider) {
+		LocalDate startDate = provider.getLastUpdate() == null ? LocalDate.now().minusDays(15) : provider.getLastUpdate().toLocalDate();
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(provider.getUrl() + provider.getPublisher() + "/transactions")
+				.queryParam("accessToken", provider.getUser())
+				.queryParam("timezone", "UTC")
+				.queryParam("startDate", startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "T00:00:00" )
+				.queryParam("endDate", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "T23:59:59");
+		@SuppressWarnings("unchecked")
+		JSONObject[] response = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,new HttpEntity<>(new HttpHeaders()), JSONObject[].class)
+													  .getBody();
+		validateSales(response);
+		
+	}
+
+	private void validateSales(JSONObject[] response) {
+		List<JSONObject> listResponse = Arrays.asList(response);
+		listResponse.forEach(json -> {
+			try {
+				String id = json.getString("id");
+				if (id != null) {
+					ScheduleSaleDTO dto = new ScheduleSaleDTO();
+					Long preSaleId = Long.valueOf(json.getJSONObject("clickRefs").getString("clickRef"));
+					dto.setAssociateId(preSaleId);
+					dto.setTransaction(id);
+					dto.setStatusId(AwinSaleStatusEnum.getByDescription(json.getString("commissionStatus")));
+					dto.setTotalValue(json.getJSONObject("saleAmount").getString("amount"));
+					dto.setComissionValue(json.getJSONObject("commissionAmount").getString("amount"));
+					updateSale(dto);
+				}
+			} catch (JSONException e) {
+				LOGGER.error("Falha ao mapear JSON", e);
+			}
+		});
+	}
+	
+	private void updateLomadee (ProviderEntity provider) {
 		String token = getToken(provider);
 		getXmlSales(provider, token);
 	}
-
 
 	private void getXmlSales(ProviderEntity provider, String token) {
 		try {

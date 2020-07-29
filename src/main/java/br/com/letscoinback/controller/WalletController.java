@@ -24,28 +24,28 @@ public class WalletController {
 	WalletService walletService;
 
 	@GetMapping("/user")
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('MASTER')")
 	public List<UserWalletDTO> getWallet(@AuthenticationPrincipal Jwt jwt) {
 		Integer id = Integer.valueOf(jwt.getClaimAsString("id"));
 		return walletService.getWalletByUser(id);
 	}
 	
 	@GetMapping("/user/draw")
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('MASTER')")
 	public void drawMoney(@AuthenticationPrincipal Jwt jwt, @RequestParam("value") Float value) {
 		Integer id = Integer.valueOf(jwt.getClaimAsString("id"));
 		 walletService.transfer(id, value);
 	}
 	
 	@GetMapping("/user/balance")
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('MASTER')")
 	public List<WalletStatusTotalProjection> getTotalStatusByUser(@AuthenticationPrincipal Jwt jwt) {
 		Integer id = Integer.valueOf(jwt.getClaimAsString("id"));
 		return walletService.getTotalFromUser(id);
 	}	
 	
 	@GetMapping("/balance")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MASTER')")
 	public List<WalletStatusTotalProjection> getTotal(
 		@RequestParam("status") Optional<String> status, 
 		@RequestParam("transactionType") Optional<String> transactionType, 
@@ -54,7 +54,7 @@ public class WalletController {
 	}
 	
 	@GetMapping("/balance/history")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MASTER')")
 	public List<WalletStatusTotalProjection> getTotalHistory(
 		@RequestParam("status") Optional<String> status, 
 		@RequestParam("transactionType") Optional<String> transactionType, 

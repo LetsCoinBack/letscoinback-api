@@ -14,7 +14,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.letscoinback.config.BlockChainConfig;
 import br.com.letscoinback.dto.BlockChainDrawBodyDTO;
 import br.com.letscoinback.dto.BlockChainResponseBodyDTO;
 import br.com.letscoinback.dto.UserWalletDTO;
@@ -32,10 +31,10 @@ public class WalletService {
 	ModelMapper modelMapper;
 	
 	@Autowired
-	BlockChainConfig blockChainConfig;
+	ConfigurationService configurationService;
 	
 	@Autowired
-	ConfigurationService configurationService;
+	MasterConfigurationService masterConfigurationService;
 	
 	@Autowired
 	UserService userService;
@@ -69,7 +68,7 @@ public class WalletService {
 	private void doDraw (Integer userId, Float drawValue) {
 		User user = userService.getUser(userId);
 		try {
-			String url = blockChainUrl + blockChainConfig.getGuid() + "/payment";
+			String url = blockChainUrl + masterConfigurationService.getById("WALLET_GUID").getValue() + "/payment";
 			BlockChainDrawBodyDTO body = createRequestBody(drawValue, user);
 			HttpEntity<BlockChainDrawBodyDTO> request = new HttpEntity<>(body, new HttpHeaders());
 		    BlockChainResponseBodyDTO response = restTemplate.exchange(url, HttpMethod.POST, request, BlockChainResponseBodyDTO.class).getBody();
@@ -101,8 +100,8 @@ public class WalletService {
 	private BlockChainDrawBodyDTO createRequestBody(Float drawValue, User user) {
 		BlockChainDrawBodyDTO body = new BlockChainDrawBodyDTO();
 		body.setAmount(drawValue);
-		body.setFrom(blockChainConfig.getAddress());
-		body.setPassword(blockChainConfig.getPassword());
+		body.setFrom( masterConfigurationService.getById("WALLET_ADDRESS").getValue() );
+		body.setPassword( masterConfigurationService.getById("WALLET_PASSWORD").getValue() );
 		body.setTo(user.getWallet());
 		return body;
 	}

@@ -14,8 +14,10 @@ import br.com.letscoinback.dto.PartnerDTO;
 import br.com.letscoinback.dto.PartnerProviderDTO;
 import br.com.letscoinback.exception.BusinessRunTimeException;
 import br.com.letscoinback.persistence.entity.Partner;
+import br.com.letscoinback.persistence.entity.PartnerSegment;
 import br.com.letscoinback.persistence.entity.ProviderEntity;
 import br.com.letscoinback.persistence.repository.PartnerRepository;
+import br.com.letscoinback.persistence.repository.PartnerSegmentRepository;
 import br.com.letscoinback.util.Translator;
 
 @Service
@@ -26,6 +28,9 @@ public class PartnerService {
 	
 	@Autowired
 	ModelMapper modelMapper;
+	
+	@Autowired
+	PartnerSegmentRepository partnerSegmenteRepository;
 	
 	@Autowired
 	ProviderService providerService;
@@ -53,7 +58,10 @@ public class PartnerService {
 	public void savePartner (PartnerDTO partner, Integer providerId) {
 		try {
 			Partner ptr = modelMapper.map(partner, Partner.class);
+			PartnerSegment ps = partnerSegmenteRepository.findByDescription(partner.getSegment())
+									.orElse(partnerSegmenteRepository.save(newSegment(partner.getSegment())));
 			ProviderEntity prov = providerService.getById(providerId);
+			ptr.setPartnerSegment(ps);
 			ptr.setProvider(prov);
 			partnerRepository.save(ptr);	
 		} catch (Exception e ) {
@@ -61,6 +69,12 @@ public class PartnerService {
 			LOGGER.error(Translator.toLocale(msg), e);
 			throw new BusinessRunTimeException(msg);
 		}
+	}
+	
+	private PartnerSegment newSegment (String segment) {
+		PartnerSegment r = new PartnerSegment();
+		r.setDescription(segment);
+		return r;
 	}
 	
 	public Partner getById(Integer id) {

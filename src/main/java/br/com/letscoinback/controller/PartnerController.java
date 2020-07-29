@@ -36,7 +36,7 @@ public class PartnerController {
 		return partnerService.validadeUrlIsPartner(url);
 	}
 	
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MASTER')")
 	@PostMapping("/register/provider/{id}")
 	public void registerPartner(@RequestBody PartnerDTO ptr,@PathVariable Integer id) {
 		partnerService.savePartner(ptr, id);

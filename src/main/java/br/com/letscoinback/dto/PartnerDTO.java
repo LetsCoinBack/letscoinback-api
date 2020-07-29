@@ -17,4 +17,5 @@ public class PartnerDTO implements Serializable{
 	private Integer userCashback;
 	private Integer position;
 	private Boolean available;
+	private String segment;
 }

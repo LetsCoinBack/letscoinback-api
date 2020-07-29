@@ -26,7 +26,7 @@ public class ModelController {
 	    @ApiResponse(code = 200, message = "Return the string.")
 	})
 	@GetMapping("/hello")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MASTER')")
 	public String hello(@AuthenticationPrincipal Jwt jwt) {
 		System.out.println(jwt.getClaimAsString("name")); // Caso precisar acessar os dados do JWT
 		return modelService.hello();

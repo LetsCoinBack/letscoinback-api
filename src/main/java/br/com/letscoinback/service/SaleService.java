@@ -55,7 +55,7 @@ public class SaleService {
 		Float saleValue = Float.valueOf(value);
 		PreSale preSale = preSaleRepository.findById(preSaleId).get();
 		System.out.println(preSale.getId());
-		Float cashback = getCashBack(preSale, saleValue);
+		Float cashback = getCashBack(preSale, saleValue, cashbackValue);
 		Wallet wallet = saveWallet(preSale.getUser().getId(), cashback, preSale);
 		Sale sale = createSale(transaction, cashbackValue, saleValue, preSale, wallet);
 		saleRepository.save(sale);
@@ -76,13 +76,16 @@ public class SaleService {
 		return sale;
 	}
 
-	private Float getCashBack(PreSale preSale, Float saleValue) {
+	private Float getCashBack(PreSale preSale, Float saleValue, String cashbackSale) {
 		Float cashback = preSale.getPartner().getUserCashback();
+		Float saleCashback = Float.valueOf(cashbackSale);
+		Float lqx = Float.valueOf(configurationService.getById("LQX_QUOTATION").getValue().replace(",", "."));
 		if (cashback == null) {
 			cashback = Float.valueOf(configurationService.getById("DEFAULT_CASHBACK_USER").getValue().replace(",", "."));
+			return (saleCashback * (cashback / 100F)) / lqx;
+		} else {
+			return (saleValue * (cashback / 100F)) / lqx;
 		}
-		Float lqx = Float.valueOf(configurationService.getById("LQX_QUOTATION").getValue().replace(",", "."));
-		return (saleValue * (cashback / 100F)) / lqx;
 	}
 
 	private Wallet saveWallet(Integer user, Float value, PreSale preSale) {

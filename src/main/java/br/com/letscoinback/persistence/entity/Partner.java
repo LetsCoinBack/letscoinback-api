@@ -36,8 +36,4 @@ public class Partner {
 	@JoinColumn(nullable = false)
 	private ProviderEntity provider;
 	
-	@ManyToOne
-	@JoinColumn(nullable = false)
-	private PartnerSegment partnerSegment;
-	
 }

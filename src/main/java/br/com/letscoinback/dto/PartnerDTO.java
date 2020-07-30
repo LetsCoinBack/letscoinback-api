@@ -1,15 +1,11 @@
 package br.com.letscoinback.dto;
 
-import java.io.Serializable;
+import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-public class PartnerDTO implements Serializable{
-
-	private static final long serialVersionUID = 3509340315625880301L;
+@Data
+public class PartnerDTO {
 	private Integer id;
 	private String name;
 	private String photo;
@@ -17,5 +13,5 @@ public class PartnerDTO implements Serializable{
 	private Integer userCashback;
 	private Integer position;
 	private Boolean available;
-	private String segment;
+	private List<String> segments;
 }

@@ -26,7 +26,7 @@ public class PartnerController {
 	PartnerService partnerService;
 	
 	@GetMapping("/all")
-	public List<PartnerProviderDTO> login (@AuthenticationPrincipal Jwt jwt) {
+	public List<PartnerProviderDTO> getAll (@AuthenticationPrincipal Jwt jwt) {
 		Boolean isAdmin = jwt != null && jwt.getClaimAsString("authorities").toUpperCase().indexOf("ADMIN") > 0;
 		return partnerService.getAll(isAdmin);
 	}

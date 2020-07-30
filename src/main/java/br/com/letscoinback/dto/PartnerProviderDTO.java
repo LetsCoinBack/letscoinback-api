@@ -1,6 +1,7 @@
 package br.com.letscoinback.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,5 +19,6 @@ public class PartnerProviderDTO implements Serializable{
 	private Integer position;
 	private Boolean available;
 	private ProviderDTO provider;
-	private PartnerSegmentDTO partnerSegment;
+	private List<String> segments;
+
 }

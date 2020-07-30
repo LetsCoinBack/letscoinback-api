@@ -118,12 +118,13 @@ public class UserService {
 			usr.setPassword(passwordEncoder.encode(user.getPassword()));
 			usr.setAvailable(true);
 			userRepository.save(usr);
-			Float registrationBonus = Float.valueOf(configurationService.getById("REGISTRATION_BONUS").getValue());
+			Float LQXCotation = Float.valueOf(configurationService.getById("LQX_QUOTATION").getValue().replace(",", "."));
+			Float registrationBonus = Float.valueOf(configurationService.getById("REGISTRATION_BONUS").getValue().replace(",", "."));
 			if (registrationBonus != null && registrationBonus > 0) {
 				Integer myId = userRepository.findByEmail(user.getEmail()).get().getId();
-				saveWallet(myId, registrationBonus, "Bônus por se cadastrar na aplicação", "Cadastro");
+				saveWallet(myId, registrationBonus / LQXCotation, "Bônus por se cadastrar na aplicação", "Cadastro");
 			}			
-			saveIndicate(user, usr);
+			saveIndicate(user, usr, LQXCotation);
 		} catch (Exception e ) {
 			String msg = "user.register.failed";
 			LOGGER.error(Translator.toLocale(msg), e);
@@ -131,11 +132,11 @@ public class UserService {
 		}
 	}
 
-	private void saveIndicate(RegisterDTO user, User usr) {
+	private void saveIndicate(RegisterDTO user, User usr, Float LQXCotation) {
 		if (usr.getIndicate() != null) {
-			Float indicationBonus = Float.valueOf(configurationService.getById("INDICATION_BONUS").getValue());
+			Float indicationBonus = Float.valueOf(configurationService.getById("INDICATION_BONUS").getValue().replace(",", "."));
 			if (indicationBonus != null && indicationBonus > 0) {
-				saveWallet(user.getIndicate(), indicationBonus, "Indicação - Bônus de indicação: " + user.getName(), "Indicação");
+				saveWallet(user.getIndicate(), indicationBonus / LQXCotation, "Indicação - Bônus de indicação: " + user.getName(), "Indicação");
 			}
 			String body = "O usuário " + usr.getName() + " que você indicou se cadastrou na ferramenta. Assim que ele efetivar seu cadastro seu bônus será creditado!";
 			notificationService.sendNotification(usr.getIndicate(), "Usuário entrou na aplicação!", body, NotificationTypeEnum.INDICATE_REGISTER);
